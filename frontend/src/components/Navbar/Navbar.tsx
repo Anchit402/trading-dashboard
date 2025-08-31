@@ -1,3 +1,4 @@
+import { DollarSign, ListOrdered } from "lucide-react";
 import { Link } from "react-router-dom";
 
 function Navbar() {
@@ -8,14 +9,18 @@ function Navbar() {
           to="/"
           className="mr-4 block cursor-pointer py-1.5 text-base text-slate-800 font-semibold"
         >
-          Trade View
+          <div className="flex items-center">
+            <DollarSign />
+            Trade View
+          </div>
         </Link>
 
         <div className="hidden lg:block">
           <ul className="flex flex-col gap-2 mt-2 mb-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
             <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
               <Link to="orders" className="flex items-center">
-                Orders
+              <ListOrdered />
+                My Orders
               </Link>
             </li>
           </ul>
