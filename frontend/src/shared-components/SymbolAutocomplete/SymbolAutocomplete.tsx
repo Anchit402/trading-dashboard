@@ -13,13 +13,17 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import type { SymbolDTO } from "@/types/symbols";
 import { ChevronsUpDown } from "lucide-react";
 import * as React from "react";
 
-export function SymbolsAutocomplete() {
+interface SymbolsAutocompleteProps {
+  onWatchListSelected: (selectedSymbol: SymbolDTO) => void
+}
+
+export function SymbolsAutocomplete({ onWatchListSelected }: SymbolsAutocompleteProps) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
-
   const { data: symbolOptions } = useSymbols();
 
   return (
@@ -41,16 +45,17 @@ export function SymbolsAutocomplete() {
           <CommandList>
             <CommandEmpty>No Symbol found.</CommandEmpty>
             <CommandGroup>
-              {(symbolOptions ?? []).map(({ name, symbol }) => (
+              {(symbolOptions ?? []).map((symbol) => (
                 <CommandItem
-                  key={symbol}
-                  value={name}
+                  key={symbol.symbol}
+                  value={symbol.name}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
+                    onWatchListSelected(symbol)
                     setOpen(false);
                   }}
                 >
-                  {name}
+                  {symbol.symbol}
                 </CommandItem>
               ))}
             </CommandGroup>
