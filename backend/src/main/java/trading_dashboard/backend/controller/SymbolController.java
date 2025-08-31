@@ -21,7 +21,6 @@ public class SymbolController {
 
     @GetMapping("/symbols")
     public List<SymbolDTO> getSymbols() throws IOException {
-        List<SymbolDTO> a = symbolService.loadSymbols();
-        return a;
+        return symbolService.loadSymbols();
     }
 }
