@@ -1,16 +1,26 @@
-import { useSymbols } from '@/actions/symbols.action';
-import { Button } from '@/components/ui/button';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { ChevronsUpDown } from 'lucide-react';
-import * as React from 'react';
+import { useSymbols } from "@/actions/symbols.action";
+import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { ChevronsUpDown } from "lucide-react";
+import * as React from "react";
 
 export function SymbolsAutocomplete() {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
 
   const { data: symbolOptions } = useSymbols();
-
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -21,7 +31,7 @@ export function SymbolsAutocomplete() {
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {value}
+          {value || "Select Symbol..."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -29,9 +39,9 @@ export function SymbolsAutocomplete() {
         <Command>
           <CommandInput placeholder="Search Symbols..." className="h-9" />
           <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandEmpty>No Symbol found.</CommandEmpty>
             <CommandGroup>
-              {(symbolOptions ?? []).map(({name, symbol}) => (
+              {(symbolOptions ?? []).map(({ name, symbol }) => (
                 <CommandItem
                   key={symbol}
                   value={name}
@@ -41,12 +51,6 @@ export function SymbolsAutocomplete() {
                   }}
                 >
                   {name}
-                  {/* <Check
-                    className={cn(
-                      "ml-auto",
-                      value === framework.value ? "opacity-100" : "opacity-0"
-                    )}
-                  /> */}
                 </CommandItem>
               ))}
             </CommandGroup>

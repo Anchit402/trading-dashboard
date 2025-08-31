@@ -1,5 +1,5 @@
-import { SymbolsAutocomplete } from "@/shared-components/Autocomplete/Autocomplete";
 import { Button } from "@/components/ui/button";
+import { SymbolsAutocomplete } from "@/shared-components/SymbolAutocomplete/SymbolAutocomplete";
 import { Plus } from "lucide-react";
 
 
