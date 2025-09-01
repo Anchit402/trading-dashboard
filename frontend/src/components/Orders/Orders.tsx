@@ -1,12 +1,16 @@
-import { OrdersDataTable } from "./OrderTable";
+import { OrdersListProvider } from '@/Providers/OrderListProvider';
+
+import { OrdersDataTable } from './OrderTable';
 
 function Orders() {
   return (
-  <div>
-    <h2>Orders</h2>
-    <OrdersDataTable />
-  </div>
-);
+    <div className="flex flex-col gap-2">
+      <h1>Orders</h1>
+      <OrdersListProvider>
+        <OrdersDataTable />
+      </OrdersListProvider>
+    </div>
+  );
 }
 
 export default Orders;

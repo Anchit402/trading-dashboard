@@ -27,7 +27,7 @@ function AddToWatchList() {
 
   return (
     <div className="flex items-center gap-2">
-      <SymbolsAutocomplete onWatchListSelected={onWatchListSelected} />
+      <SymbolsAutocomplete onWatchListSelected={onWatchListSelected} subscribedSymbols={[]} />
       <Button
         variant="outline"
         size="sm"

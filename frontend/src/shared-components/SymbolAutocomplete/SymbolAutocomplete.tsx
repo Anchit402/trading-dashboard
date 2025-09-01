@@ -2,22 +2,23 @@ import { useSymbols } from '@/actions/symbols.action';
 import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { useWatchListContext } from '@/Providers/WatchListProvider/WatchListProvider';
 import { ChevronsUpDown } from 'lucide-react';
 import * as React from 'react';
 
 import type { SymbolDTO } from "@/types/symbols";
 interface SymbolsAutocompleteProps {
-  onWatchListSelected: (selectedSymbol: SymbolDTO) => void;
+  onWatchListSelected?: (selectedSymbol: SymbolDTO) => void;
+  subscribedSymbols: SymbolDTO['symbol'][],
+  placeholder?: string
 }
 
 export function SymbolsAutocomplete({
   onWatchListSelected,
+  placeholder
 }: SymbolsAutocompleteProps) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
   const { data: symbols } = useSymbols();
-  const { subscribedSymbols } = useWatchListContext();
   const symbolOptions = React.useMemo(() => {
     return symbols?.filter(
       ({ symbol }) =>
@@ -25,7 +26,7 @@ export function SymbolsAutocomplete({
           ({ symbol: subscribedSymbol }) => symbol !== subscribedSymbol
         )
     );
-  }, [symbols, subscribedSymbols]);
+  }, [symbols]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -36,7 +37,7 @@ export function SymbolsAutocomplete({
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {value || "Select Symbol..."}
+          {value || placeholder || "Select Symbol..."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -52,7 +53,7 @@ export function SymbolsAutocomplete({
                   value={symbol.name}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
-                    onWatchListSelected(symbol);
+                    onWatchListSelected?.(symbol);
                     setOpen(false);
                   }}
                 >
