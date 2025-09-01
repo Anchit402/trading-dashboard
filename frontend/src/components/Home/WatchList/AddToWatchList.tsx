@@ -19,7 +19,7 @@ function AddToWatchList() {
 
   const onAddClicked = useCallback((symbol?: SymbolDTO) => {
     if (symbol) {
-      const newWatchList = [symbol, ...subscribedSymbols];
+      const newWatchList = [...subscribedSymbols, symbol];
       onChangeInSubscribedSymbolsList(newWatchList);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

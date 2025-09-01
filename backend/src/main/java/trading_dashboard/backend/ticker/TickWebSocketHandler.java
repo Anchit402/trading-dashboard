@@ -51,19 +51,26 @@ public class TickWebSocketHandler extends TextWebSocketHandler {
     }
 
     private void broadcastTicks() {
-        for (Map.Entry<WebSocketSession, Set<String>> entry : subscriptions.entrySet()) {
-            WebSocketSession session = entry.getKey();
+        for (WebSocketSession key : subscriptions.keySet()) {
+            WebSocketSession session = key;
             if (!session.isOpen()) continue;
 
-            for (String symbol : entry.getValue()) {
-                try {
-                    Map<String, Object> tick = generateTick(symbol);
-                    String json = mapper.writeValueAsString(tick);
-                    session.sendMessage(new TextMessage(json));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                session.sendMessage(new TextMessage("sent"));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
+//            for (String symbol : subscriptions.get(key)) {
+//
+//                try {
+//                    Map<String, Object> tick = generateTick(symbol);
+//                    String json = mapper.writeValueAsString(tick);
+//                    session.sendMessage(new TextMessage(json));
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
         }
     }
 

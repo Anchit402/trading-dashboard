@@ -1,5 +1,12 @@
+import { OrdersDataTable } from "./OrderTable";
+
 function Orders() {
-  return <div>Orders</div>;
+  return (
+  <div>
+    <h2>Orders</h2>
+    <OrdersDataTable />
+  </div>
+);
 }
 
 export default Orders;

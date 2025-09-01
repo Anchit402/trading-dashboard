@@ -21,7 +21,7 @@ export function SymbolsAutocomplete({
   const symbolOptions = React.useMemo(() => {
     return symbols?.filter(
       ({ symbol }) =>
-        subscribedSymbols.find(
+        symbols.find(
           ({ symbol: subscribedSymbol }) => symbol !== subscribedSymbol
         )
     );

@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function SubscriptionsList() {
   const [ticks, setTicks] = useState<string[]>([]);
 
-  const ws = new WebSocket("ws://localhost:8080/ws/ticks");
-  ws.onmessage = (event: MessageEvent<string>) => {
-    setTicks((prev) => [...prev, event.data]);
-  };
+  useEffect(() => {
+    const ws = new WebSocket("ws://localhost:8080/ws/ticks");
+    ws.onmessage = (event: MessageEvent<string>) => {
+      setTicks((prev) => [...prev, event.data]);
+    };
+  }, []);
 
   return (
     <div className="p-4 border rounded-md">
