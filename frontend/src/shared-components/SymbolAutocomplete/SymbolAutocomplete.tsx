@@ -1,30 +1,31 @@
-import { useSymbols } from "@/actions/symbols.action";
-import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import type { SymbolDTO } from "@/types/symbols";
-import { ChevronsUpDown } from "lucide-react";
-import * as React from "react";
+import { useSymbols } from '@/actions/symbols.action';
+import { Button } from '@/components/ui/button';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { useWatchListContext } from '@/Providers/WatchListProvider/WatchListProvider';
+import { ChevronsUpDown } from 'lucide-react';
+import * as React from 'react';
 
+import type { SymbolDTO } from "@/types/symbols";
 interface SymbolsAutocompleteProps {
-  onWatchListSelected: (selectedSymbol: SymbolDTO) => void
+  onWatchListSelected: (selectedSymbol: SymbolDTO) => void;
 }
 
-export function SymbolsAutocomplete({ onWatchListSelected }: SymbolsAutocompleteProps) {
+export function SymbolsAutocomplete({
+  onWatchListSelected,
+}: SymbolsAutocompleteProps) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
-  const { data: symbolOptions } = useSymbols();
+  const { data: symbols } = useSymbols();
+  const { subscribedSymbols } = useWatchListContext();
+  const symbolOptions = React.useMemo(() => {
+    return symbols?.filter(
+      ({ symbol }) =>
+        subscribedSymbols.find(
+          ({ symbol: subscribedSymbol }) => symbol !== subscribedSymbol
+        )
+    );
+  }, [symbols, subscribedSymbols]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -51,11 +52,11 @@ export function SymbolsAutocomplete({ onWatchListSelected }: SymbolsAutocomplete
                   value={symbol.name}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
-                    onWatchListSelected(symbol)
+                    onWatchListSelected(symbol);
                     setOpen(false);
                   }}
                 >
-                  {symbol.symbol}
+                  {symbol.name}
                 </CommandItem>
               ))}
             </CommandGroup>
