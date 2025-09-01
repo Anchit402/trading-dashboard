@@ -26,7 +26,7 @@ import { type OrderDTO } from "@/types/orders";
 import { Button } from "../ui/button";
 import { ArrowUpDown } from "lucide-react";
 import OrderTableFilters from "./OrderTableFilters";
-import { useOrders } from "@/actions/orders.actions";
+import { useOrdersListContext } from "@/Providers/OrderListProvider";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const columns: ColumnDef<OrderDTO>[] = [
@@ -84,7 +84,7 @@ export const columns: ColumnDef<OrderDTO>[] = [
 ];
 
 export function OrdersDataTable() {
-  const { data } = useOrders('APPL ');
+  const { orders: data } = useOrdersListContext();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []

@@ -2,6 +2,7 @@ package trading_dashboard.backend.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import trading_dashboard.backend.dto.OrderDTO;
 import trading_dashboard.backend.dto.SymbolDTO;
@@ -24,13 +25,15 @@ public class OrderService {
     }
 
     public List<OrderDTO> parseOrders(String symbol) {
-        Path filePath = BASE_DIR.resolve(symbol + ".json");
+        String fileName = "db-files/orders/" + symbol + ".json";
+        ClassPathResource resource = new ClassPathResource(fileName);
 
-        if (!Files.exists(filePath)) {
+        if (!resource.exists()) {
             return new ArrayList<>();
         }
 
-        try (InputStream is = Files.newInputStream(filePath)) {
+
+        try (InputStream is = resource.getInputStream()) {
             return objectMapper.readValue(is, new TypeReference<>() {});
         } catch (IOException e) {
             throw new RuntimeException("Failed to read orders for symbol " + symbol, e);

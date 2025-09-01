@@ -3,11 +3,15 @@ import {
   createContext,
   useContext,
   useMemo,
+  useState,
   type PropsWithChildren,
 } from "react";
 
 interface OrdersListContextType {
   orders: OrderDTO[];
+  symbolSelected: OrderDTO["symbol"] | null;
+  onOrderListChange: (orders: OrderDTO[]) => void;
+  onSelectedSymbolChange: (symbol: OrderDTO["symbol"] | null) => void;
 }
 
 const OrdersListContext = createContext<OrdersListContextType | null>(null);
@@ -23,9 +27,27 @@ export function useOrdersListContext() {
 }
 
 export function OrdersListProvider({ children }: PropsWithChildren) {
+  const [orders, setOrders] = useState<OrderDTO[]>([]);
+  const [symbolSelected, setSymbolSelected] = useState<
+    OrderDTO["symbol"] | null
+  >(null);
+
+  const onOrderListChange = (orders: OrderDTO[]) => {
+    setOrders(orders);
+  };
+
+  const onSelectedSymbolChange = (symbol: OrderDTO["symbol"] | null) => {
+    setSymbolSelected(symbol);
+  };
+
   const contextValue: OrdersListContextType = useMemo(
-    () => ({ orders: [] }),
-    []
+    () => ({
+      orders,
+      symbolSelected,
+      onOrderListChange,
+      onSelectedSymbolChange,
+    }),
+    [orders, symbolSelected]
   );
 
   return (

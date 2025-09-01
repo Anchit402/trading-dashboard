@@ -20,9 +20,10 @@ async function fetchOrdersBySymbol(symbol: OrderDTO['symbol']) {
   }
 }
 
-export function useOrders(symbol: OrderDTO['symbol']) {
+export function useOrders(symbol: OrderDTO['symbol'] | null) {
   return useQuery({
     queryKey: ["order", symbol],
-    queryFn: () => fetchOrdersBySymbol(symbol),
+    queryFn: () => fetchOrdersBySymbol(symbol!),
+    enabled: !!symbol
   });
 }
