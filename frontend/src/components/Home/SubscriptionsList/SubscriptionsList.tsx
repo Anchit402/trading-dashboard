@@ -1,14 +1,7 @@
-import { useEffect, useState } from "react";
+import { useWatchListContext } from "@/Providers/WatchListProvider/WatchListProvider";
 
 export default function SubscriptionsList() {
-  const [ticks, setTicks] = useState<string[]>([]);
-
-  useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8080/ws/ticks");
-    ws.onmessage = (event: MessageEvent<string>) => {
-      setTicks((prev) => [...prev, event.data]);
-    };
-  }, []);
+  const { ticks } = useWatchListContext();
 
   return (
     <div className="p-4 border rounded-md">

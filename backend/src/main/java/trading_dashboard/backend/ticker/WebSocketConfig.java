@@ -11,13 +11,15 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
-    public WebSocketHandler tickWebSocketHandler() {
-        return new TickWebSocketHandler();
+    private final TickWebSocketHandler tickWebSocketHandler;
+
+    public WebSocketConfig(TickWebSocketHandler tickWebSocketHandler) {
+        this.tickWebSocketHandler = tickWebSocketHandler;
     }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(tickWebSocketHandler(), "/ws/ticks")
+        registry.addHandler(tickWebSocketHandler, "/ws/ticks")
                 .setAllowedOrigins("http://localhost:5173");
     }
 }

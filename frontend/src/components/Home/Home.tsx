@@ -7,8 +7,8 @@ function Home() {
     <div className="flex gap-3 h-full">
       <WatchListProvider>
         <WatchList />
+        <SubscriptionsList />
       </WatchListProvider>
-      <SubscriptionsList />
     </div>
   );
 }

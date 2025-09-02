@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+import trading_dashboard.backend.dto.SymbolDTO;
+import trading_dashboard.backend.service.SymbolService;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -18,10 +20,15 @@ public class TickWebSocketHandler extends TextWebSocketHandler {
     private final ObjectMapper mapper = new ObjectMapper();
     private final Map<WebSocketSession, Set<String>> subscriptions = new ConcurrentHashMap<>();
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private final SymbolService symbolService;
+    private final List<SymbolDTO> Symbols;
 
-    public TickWebSocketHandler() {
+    public TickWebSocketHandler(SymbolService symbolService) {
         scheduler.scheduleAtFixedRate(this::broadcastTicks, 1, 1, TimeUnit.SECONDS);
+        this.symbolService = symbolService;
+        this.Symbols = this.symbolService.loadSymbols();
     }
+
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
@@ -37,10 +44,9 @@ public class TickWebSocketHandler extends TextWebSocketHandler {
 
         if ("subscribe".equalsIgnoreCase(action)) {
             subscriptions.get(session).add(symbol);
-            System.out.println("Subscribed to " + symbol + " for session " + session.getId());
-        } else if ("unsubscribe".equalsIgnoreCase(action)) {
+        }
+        else if ("unsubscribe".equalsIgnoreCase(action)) {
             subscriptions.get(session).remove(symbol);
-            System.out.println("Unsubscribed from " + symbol + " for session " + session.getId());
         }
     }
 
@@ -55,25 +61,50 @@ public class TickWebSocketHandler extends TextWebSocketHandler {
             WebSocketSession session = key;
             if (!session.isOpen()) continue;
 
-            try {
-                session.sendMessage(new TextMessage("sent"));
-            } catch (IOException e) {
-                e.printStackTrace();
+            Set<String> symbols = subscriptions.get(key);
+            for (String symbol : symbols) {
+                try {
+                    Map<String, Object> tick = generateTick(symbol);
+                    String json = mapper.writeValueAsString(tick);
+                    session.sendMessage(new TextMessage(json));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     private Map<String, Object> generateTick(String symbol) {
-        double price = 180 + Math.random() * 5; // $180–185 range
         int volume = (int) (Math.random() * 100) + 1;
         long timestamp = Instant.now().getEpochSecond();
 
         Map<String, Object> tick = new HashMap<>();
+
         tick.put("symbol", symbol);
-        tick.put("price", Math.round(price * 100.0) / 100.0);
+        tick.put("price", Math.round(computeRandomPriceWithinClosePriceRange(symbol) * 100.0) / 100.0);
         tick.put("volume", volume);
         tick.put("timestamp", timestamp);
         return tick;
+    }
+
+    private double computeRandomPriceWithinClosePriceRange(String symbol) {
+        double closePrice = Symbols.stream()
+                .filter(s -> s.getSymbol().equals(symbol))
+                .map(SymbolDTO::getClosePrice)   // extract price
+                .findFirst()
+                .orElse(0.0);
+
+
+        if (closePrice <= 0) {
+            return 0.0; // fallback for invalid symbols
+        }
+
+        // ±5% range
+        double min = closePrice * 0.95;
+        double max = closePrice * 1.05;
+
+        // random value in range
+        return min + (max - min) * (new Random()).nextDouble();
     }
 }
 
