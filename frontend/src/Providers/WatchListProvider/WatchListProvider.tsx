@@ -1,6 +1,5 @@
 import {
   createContext,
-  useCallback,
   useContext,
   useMemo,
   useState,
@@ -10,7 +9,8 @@ import {
 import type { SymbolDTO } from "@/types/symbols";
 interface WatchListContextType {
   subscribedSymbols: SymbolDTO[];
-  onChangeInSubscribedSymbolsList: (symbols: SymbolDTO[]) => void;
+  onAddSubscription: (symbol: SymbolDTO) => void;
+  onRemoveSubscription: (symbol: SymbolDTO) => void;
 }
 
 const WatchListContext = createContext<WatchListContextType | null>(null);
@@ -28,16 +28,18 @@ export function useWatchListContext() {
 function WatchListProvider({ children }: PropsWithChildren) {
   const [subscribedSymbols, setSubscribedSymbols] = useState<SymbolDTO[]>([]);
 
-  const onChangeInSubscribedSymbolsList = useCallback(
-    (symbols: SymbolDTO[]) => {
-      setSubscribedSymbols(symbols);
-    },
-    []
-  );
+  const onAddSubscription = (symbol: SymbolDTO) => {
+    setSubscribedSymbols((prev) => [...prev, symbol].slice());
+  };
+
+  const onRemoveSubscription = (symbol: SymbolDTO) => {
+    setSubscribedSymbols((prev) =>
+      prev.filter((v) => v.symbol !== symbol.symbol)
+    );
+  };
 
   const contextValue: WatchListContextType = useMemo(
-    () => ({ subscribedSymbols, onChangeInSubscribedSymbolsList }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    () => ({ subscribedSymbols, onRemoveSubscription, onAddSubscription }),
     [subscribedSymbols]
   );
 

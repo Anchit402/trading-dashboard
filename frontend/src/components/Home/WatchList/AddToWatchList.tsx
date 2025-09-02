@@ -9,25 +9,27 @@ function AddToWatchList() {
   const [watchListToAdd, setWatchListToAdd] = useState<SymbolDTO | undefined>(
     undefined
   );
-  const { subscribedSymbols, onChangeInSubscribedSymbolsList } =
-    useWatchListContext();
+  const { onAddSubscription } = useWatchListContext();
 
   const onWatchListSelected = useCallback((selectedSymbol: SymbolDTO) => {
     setWatchListToAdd(selectedSymbol);
   }, []);
 
-
-  const onAddClicked = useCallback((symbol?: SymbolDTO) => {
-    if (symbol) {
-      const newWatchList = [...subscribedSymbols, symbol];
-      onChangeInSubscribedSymbolsList(newWatchList);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subscribedSymbols]);
+  const onAddClicked = useCallback(
+    (symbol?: SymbolDTO) => {
+      if (symbol) {
+        onAddSubscription(symbol);
+      }
+    },
+    [onAddSubscription]
+  );
 
   return (
     <div className="flex items-center gap-2">
-      <SymbolsAutocomplete onWatchListSelected={onWatchListSelected} subscribedSymbols={[]} />
+      <SymbolsAutocomplete
+        onWatchListSelected={onWatchListSelected}
+        subscribedSymbols={[]}
+      />
       <Button
         variant="outline"
         size="sm"

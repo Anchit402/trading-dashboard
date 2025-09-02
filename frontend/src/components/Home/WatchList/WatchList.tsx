@@ -6,17 +6,14 @@ import { useCallback } from "react";
 import type { SymbolDTO } from "@/types/symbols";
 
 function WatchList() {
-  const { subscribedSymbols, onChangeInSubscribedSymbolsList } =
-    useWatchListContext();
+  const { subscribedSymbols, onRemoveSubscription } = useWatchListContext();
 
   const onDeleteSymbol = useCallback(
     (symbolToBeDeleted: SymbolDTO) => {
-      const newWatchList = subscribedSymbols.filter(
-        ({ symbol }) => symbol !== symbolToBeDeleted.symbol
-      );
-      onChangeInSubscribedSymbolsList(newWatchList);
+      onRemoveSubscription(symbolToBeDeleted);
     },
-    [onChangeInSubscribedSymbolsList, subscribedSymbols]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
 
   return (
