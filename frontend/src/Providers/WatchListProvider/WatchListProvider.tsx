@@ -9,11 +9,12 @@ import {
 } from "react";
 
 import type { SymbolDTO } from "@/types/symbols";
+import type { TickDTO } from "@/types/tick";
 interface WatchListContextType {
   subscribedSymbols: SymbolDTO[];
   onAddSubscription: (symbol: SymbolDTO) => void;
   onRemoveSubscription: (symbol: SymbolDTO) => void;
-  ticks: string[];
+  ticks: TickDTO[];
 }
 
 const WatchListContext = createContext<WatchListContextType | null>(null);
@@ -30,7 +31,7 @@ export function useWatchListContext() {
 
 function WatchListProvider({ children }: PropsWithChildren) {
   const [subscribedSymbols, setSubscribedSymbols] = useState<SymbolDTO[]>([]);
-  const [ticks, setTicks] = useState<string[]>([]);
+  const [ticks, setTicks] = useState<TickDTO[]>([]);
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
@@ -38,7 +39,7 @@ function WatchListProvider({ children }: PropsWithChildren) {
     wsRef.current = ws;
 
     ws.onmessage = (event: MessageEvent<string>) => {
-      setTicks((prev) => [event.data, ...prev]);
+      setTicks((prev) => [JSON.parse(event.data) satisfies TickDTO, ...prev]);
     };
 
     return () => {
