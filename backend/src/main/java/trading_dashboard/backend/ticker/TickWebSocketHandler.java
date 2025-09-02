@@ -60,17 +60,6 @@ public class TickWebSocketHandler extends TextWebSocketHandler {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-//            for (String symbol : subscriptions.get(key)) {
-//
-//                try {
-//                    Map<String, Object> tick = generateTick(symbol);
-//                    String json = mapper.writeValueAsString(tick);
-//                    session.sendMessage(new TextMessage(json));
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
         }
     }
 

@@ -3,8 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { toast } from "sonner";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -31,7 +29,11 @@ const FormSchema = z.object({
   price: z.coerce.number<number>().positive("Price must be greater than 0"),
 });
 
-export function OrdersForm() {
+interface OrdersFormProps {
+  onSuccess?: () => void;
+}
+
+export function OrdersForm({ onSuccess }: OrdersFormProps) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -47,24 +49,7 @@ export function OrdersForm() {
   function onSubmit(data: z.infer<typeof FormSchema>) {
     const req: PostOrderReq = data;
     mutateOrder(req, {
-      onSuccess: ({ symbol }) => {
-        toast(`Order for ${symbol} has been created`, {
-          description: "Sunday, December 03, 2023 at 9:00 AM",
-          action: {
-            label: "Undo",
-            onClick: () => console.log("Undo"),
-          },
-        });
-      },
-      onError: (err) => {
-        toast(`${err}`, {
-          description: "Sunday, December 03, 2023 at 9:00 AM",
-          action: {
-            label: "Undo",
-            onClick: () => console.log("Undo"),
-          },
-        });
-      },
+      onSuccess: () => onSuccess?.(),
     });
   }
 
@@ -102,6 +87,7 @@ export function OrdersForm() {
                   <SideSelect
                     name={field.name}
                     value={field.value}
+                    onChange={field.onChange}
                     className="w-full"
                   />
                 </FormControl>

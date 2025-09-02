@@ -8,11 +8,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
+import { useCallback, useState } from "react";
 
 function AddOrder() {
+  const [open, setOpen] = useState(false);
+
+  const onSuccess = useCallback(() => setOpen(false), []);
+
   return (
     <div>
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild={true}>
           <Button variant="outline" size="sm">
             Create
@@ -25,7 +30,7 @@ function AddOrder() {
             </DialogTitle>
             <DialogDescription asChild={true}>
               <div>
-                <OrdersForm />
+                <OrdersForm onSuccess={onSuccess} />
               </div>
             </DialogDescription>
           </DialogHeader>
