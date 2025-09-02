@@ -26,10 +26,12 @@ This project is a browser-based trading application that supports real-time mark
 
 ## Tech Stack
 **Frontend:**  
-- React / Vue.js (browser extension)  
+- React 19 
 - TypeScript  
-- React Query / RxJS for state management  
-- TailwindCSS  
+- React Query
+- TailwindCSS
+- Context API
+- Shadcn
 
 **Backend:**  
 - Spring Boot (Java)  
@@ -41,4 +43,45 @@ This project is a browser-based trading application that supports real-time mark
 ## Getting Started
 
 ### Backend
-1. **Install dependencies:**  
+**Install dependencies:**
+Navigate to the backend folder and run the JAR:
+
+```bash
+cd backend
+java -jar target/ims-0.0.1-SNAPSHOT.jar
+```
+
+**server location:**
+http://localhost:8080
+
+
+### Frontend
+**Install dependencies:**
+
+If you don’t have Node.js and npm installed, download and install from [Node.js official site](https://nodejs.org/). Verify installation:
+
+```bash
+node -v
+npm -v
+```
+
+Navigate to the backend folder and run the JAR:
+```bash
+cd frontend
+npm i
+npm run dev
+```
+
+**server location:**
+http://localhost:5173
+
+---
+
+## API Documentation
+[Swagger Docs](http://localhost:8080/swagger-ui/index.html#/)
+After building backend
+
+---
+## Demo
+
+
