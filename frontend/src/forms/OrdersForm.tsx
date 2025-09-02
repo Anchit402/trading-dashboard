@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,13 +18,8 @@ import { Input } from "@/components/ui/input";
 import { Side } from "@/enums/side";
 import { SymbolsAutocomplete } from "@/shared-components/SymbolAutocomplete/SymbolAutocomplete";
 import { SideSelect } from "@/shared-components/SideSelect";
-
-// const FormSchema = z.object({
-//   symbol: z.string(),
-//   side: z.enum(Side),
-//   qty: z.coerce.number<number>(),
-//   price: z.coerce.number<number>(),
-// });
+import type { PostOrderReq } from "@/types/orders";
+import { usePostOrder } from "@/actions/postOrder.action";
 
 const FormSchema = z.object({
   symbol: z.string().min(1, "Symbol is required"),
@@ -46,8 +42,30 @@ export function OrdersForm() {
     },
   });
 
+  const { mutate: mutateOrder } = usePostOrder();
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
+    const req: PostOrderReq = data;
+    mutateOrder(req, {
+      onSuccess: ({ symbol }) => {
+        toast(`Order for ${symbol} has been created`, {
+          description: "Sunday, December 03, 2023 at 9:00 AM",
+          action: {
+            label: "Undo",
+            onClick: () => console.log("Undo"),
+          },
+        });
+      },
+      onError: (err) => {
+        toast(`${err}`, {
+          description: "Sunday, December 03, 2023 at 9:00 AM",
+          action: {
+            label: "Undo",
+            onClick: () => console.log("Undo"),
+          },
+        });
+      },
+    });
   }
 
   return (

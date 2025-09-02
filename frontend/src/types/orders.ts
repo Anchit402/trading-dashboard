@@ -7,3 +7,5 @@ export interface OrderDTO extends Pick<SymbolDTO, "symbol"> {
   price: number;
   timestamp: number;
 }
+
+export type PostOrderReq = Pick<OrderDTO, 'symbol' | 'price' | 'qty' | 'side'>
