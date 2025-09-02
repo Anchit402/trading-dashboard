@@ -30,7 +30,7 @@ function WatchListProvider({ children }: PropsWithChildren) {
 
   const onChangeInSubscribedSymbolsList = useCallback(
     (symbols: SymbolDTO[]) => {
-      setSubscribedSymbols(symbols.slice());
+      setSubscribedSymbols(symbols);
     },
     []
   );

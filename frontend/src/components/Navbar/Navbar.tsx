@@ -20,7 +20,7 @@ function Navbar() {
             <li className="flex items-center p-1 text-sm gap-x-2 text-slate-600">
               <Link to="orders" className="flex items-center">
                 <ListOrdered />
-                My Orders
+                Orders
               </Link>
             </li>
           </ul>
