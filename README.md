@@ -43,7 +43,7 @@ This project is a browser-based trading application that supports real-time mark
 ## Getting Started
 
 ### Backend
-**Install dependencies:**
+**Install dependencies (Download java 21):**
 Navigate to the backend folder and run the JAR:
 
 ```bash
